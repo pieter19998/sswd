@@ -1,0 +1,107 @@
+@model DossierEdit
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Dossier</h4>
+<hr/>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="DossierId"/>
+            <div class="form-group">
+                <label asp-for="Age" class="control-label"></label>
+                <input asp-for="Age" class="form-control"/>
+                <span asp-validation-for="Age" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control"/>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BodyLocation" class="control-label"></label>
+                <select asp-for="BodyLocation" class="form-control" asp-items="ViewBag.BodyLocation" id="bodyLocation"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Pathology" class="control-label"></label>
+                <select asp-for="Code" id="PathologySelect" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="DiagnoseDescription" class="control-label"></label>
+                <textarea asp-for="DiagnoseDescription" id="DiagnoseDescription" class="form-control" rows="5" readonly></textarea>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PatientType" class="control-label"></label>
+                <select asp-for="PatientType" class="form-control"></select>
+                <span asp-validation-for="PatientType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HeadPractitionerId" class="control-label"></label>
+                <select asp-for="HeadPractitionerId" class="form-control" asp-items="ViewBag.HeadPractitionerId"></select>
+                <span asp-validation-for="HeadPractitionerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApplicationDay" class="control-label"></label>
+                <input asp-for="ApplicationDay" class="form-control"/>
+                <span asp-validation-for="ApplicationDay" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DismissalDay" class="control-label"></label>
+                <input asp-for="DismissalDay" class="form-control"/>
+                <span asp-validation-for="DismissalDay" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PatientId" class="control-label"></label>
+                <select asp-for="PatientId" class="form-control" asp-items="ViewBag.PatientId"></select>
+                <span asp-validation-for="PatientId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+//get dates
+$( '#bodyLocation' ).change(function() {
+  var selectedName = $(this).children('option:selected').val();
+  $.ajax({
+                      type: "POST",
+                      url: "/dossier/GetPathology",
+                      data: "bodyLocation=" + selectedName,
+                      success: function (data) {
+                          document.getElementById("PathologySelect").innerText = "";
+                         $.each(data, function (i, item) {
+                             $('#PathologySelect').append($('<option>', { 
+                                 value: item.code,
+                                 text : item.pathology 
+                             }));
+                         });
+                      }
+                  });
+});
+$( '#PathologySelect' ).change(function() {
+  var selectedName = $(this).children('option:selected').val();
+  $.ajax({
+                      type: "POST",
+                      url: "/dossier/GetDescription",
+                      data: "code=" + selectedName,
+                      success: function (data) {
+                          if (data.length > 0) {  
+                              document.getElementById('DiagnoseDescription').value=data;
+                          }
+                      }
+                  });
+});
+</script>

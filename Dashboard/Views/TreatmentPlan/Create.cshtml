@@ -1,0 +1,33 @@
+@model TreatmentPlanModel
+
+@{
+    ViewData["Title"] = "Create";
+    var id = (int) TempData["dossierId"];
+}
+
+<h1>Create</h1>
+
+<h4>TreatmentPlan</h4>
+<hr/>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="DossierId" value="@id" hidden>
+            <div class="form-group">
+                <label asp-for="SessionsPerWeek" class="control-label"></label>
+                <input type="number" min="1" max="7" asp-for="SessionsPerWeek" class="form-control"/>
+                <span asp-validation-for="SessionsPerWeek" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SessionDuration" class="control-label"></label>
+                <input asp-for="SessionDuration" type="number" class="form-control" placeholder=""/>
+                <small id="" class="text-muted">Time in minutes</small>
+                <span asp-validation-for="SessionDuration" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+</div>

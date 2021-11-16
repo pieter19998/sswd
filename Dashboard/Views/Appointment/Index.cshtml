@@ -1,0 +1,89 @@
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using Core
+@model IEnumerable<Core.Appointment>
+
+<h1>Index</h1>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @HtmlHelperDisplayNameExtensions.DisplayNameFor(Html, model => model.StartTime)
+        </th>
+        <th>
+            @HtmlHelperDisplayNameExtensions.DisplayNameFor(Html, model => model.EndTime)
+        </th>
+        <th>
+            @HtmlHelperDisplayNameExtensions.DisplayNameFor(Html, model => model.AppointmentType)
+        </th>
+        <th>
+            @HtmlHelperDisplayNameExtensions.DisplayNameFor(Html, model => model.Cancelled)
+        </th>
+        <th>
+            @HtmlHelperDisplayNameExtensions.DisplayNameFor(Html, model => model.Intake.Email)
+        </th>
+        <th>
+            Patient Name
+        </th>
+        <th>
+            Employee Name
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @if (Model != null)
+    {
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AppointmentType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cancelled)
+                </td>
+                <td>
+                    @if (item.AppointmentType == AppointmentType.INTAKE)
+                    {
+                        @Html.DisplayFor(modelItem => item.Intake.Email)
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.Patient.Email)
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Patient.Firstname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EfEmployee.Firstname)
+                </td>
+                <td>
+                    @if (User.IsInRole("PATIENT"))
+                    {
+                        @Html.ActionLink("Cancel Appointment", "Delete", "Appointment", new {id = item.AppointmentId}, new {@class = "btn btn-primary"})
+                    }
+                    else
+                    {
+                        if (item.AppointmentType == AppointmentType.INTAKE)
+                        {
+                            @Html.ActionLink("Start Intake", "Edit", "Intake", new {id = item.IntakeId}, new {@class = "btn btn-primary"})
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Start Session", "Edit", "Session", new {id = item.SessionId}, new {@class = "btn btn-primary"})
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>

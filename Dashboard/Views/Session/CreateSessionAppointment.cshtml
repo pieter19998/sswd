@@ -1,0 +1,99 @@
+﻿@* @model AppointmentSession *@
+@* *@
+@* <script *@
+@*     src="https://code.jquery.com/jquery-3.6.0.slim.min.js" *@
+@*     integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" *@
+@*     crossorigin="anonymous"> *@
+@* </script> *@
+@* *@
+@* <h4>Intake</h4> *@
+@* <hr/> *@
+@* <div class="row"> *@
+@*     <div class="col-sm-3"> *@
+@*         <form asp-action="Create"> *@
+@*             <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="EmployeeId" class="control-label">Employee</label> *@
+@*                 <select asp-for="EmployeeId" class="form-control" id="employee" asp-items="ViewBag.EmployeeId"></select> *@
+@*             </div> *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="Day" class="control-label">Day</label> *@
+@*                 <select asp-for="Day" class="form-control" id="day"></select> *@
+@*             </div> *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="Time" class="control-label">From</label> *@
+@*                 <input asp-for="Time" class="form-control" type="time" id="time"/> *@
+@*                 <span asp-validation-for="Time" class="text-danger"></span> *@
+@*             </div> *@
+@*             <div class="form-group"> *@
+@*                 <label class="control-label">Until</label> *@
+@*                 <input class="form-control" type="time" id="until" readonly/> *@
+@*             </div> *@
+@*             <div class="form-group"> *@
+@*                 <input type="submit" value="Create" class="btn btn-primary"/> *@
+@*             </div> *@
+@*         </form> *@
+@*     </div> *@
+@*     <div class="col-sm-1"> *@
+@*         <p></p> *@
+@*     </div> *@
+@*     <div class="col-sm-8"> *@
+@*         <p id="data"></p> *@
+@*     </div> *@
+@* </div> *@
+@* *@
+@* *@
+@* <script> *@
+@* $( '#employee' ).change(function() { *@
+@*   var selectedName = $(this).children('option:selected').val(); *@
+@*   $.ajax({ *@
+@*                       type: "POST", *@
+@*                       url: "/appointment/GetDays", *@
+@*                       data: "employeeId=" + selectedName, *@
+@*                       success: function (data) { *@
+@*                           document.getElementById("day").innerText = ""; *@
+@*                          $.each(data, function (i, item) { *@
+@*                              $('#day').append($('<option>', {  *@
+@*                                  value: new Date(item.availableFrom).toDateString(), *@
+@*                                  text : new Date(item.availableFrom).toDateString() *@
+@*                              })); *@
+@*                          }); *@
+@*                       } *@
+@*                   }); *@
+@* }); *@
+@* *@
+@* $( '#day' ).change(function() { *@
+@*   var selectedName = $(this).children('option:selected').val(); *@
+@*   var selectedEmployee = $('#employee').children('option:selected').val(); *@
+@*   $.ajax({ *@
+@*                       type: "POST", *@
+@*                       url: "/appointment/GetClaimedTimes", *@
+@*                       data: { *@
+@*                         employeeId: selectedEmployee, *@
+@*                         date: selectedName  *@
+@*                       }, *@
+@*                       success: function (data) { *@
+@*                         const element = document.getElementById('data'); *@
+@*                         element.innerText = ""; *@
+@*                         if (data.length > 0) { *@
+@*                             $.each(data, function (i, item) { *@
+@*                                 var date = new Date(item.startTime).toLocaleTimeString('nl-NL'); *@
+@*                                 var date2 = new Date(item.endTime).toLocaleTimeString('nl-NL');  *@
+@*                                 const labelFrom = document.createElement("label"); *@
+@*                                 labelFrom.innerText = "Unavailable from:" + date + " Unavailable To:" + date2; *@
+@*                                 element.appendChild(labelFrom); *@
+@*    *@
+@*                             }); *@
+@*                         } *@
+@*                       } *@
+@*                   }); *@
+@* }); *@
+@* *@
+@* $( '#time' ).change(function() { *@
+@*     const time = document.getElementById('time'); *@
+@*     const date = new Date(); *@
+@*     const date2 = new Date(date.toDateString() + ' ' + time.value) *@
+@*     date2.setHours( date2.getHours() + 1 ); *@
+@*     const element = document.getElementById('until').value = date2.toLocaleTimeString('nl-NL'); *@
+@* }); *@
+@* </script> *@

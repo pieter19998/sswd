@@ -1,0 +1,31 @@
+@model NoteModel
+
+<h1>AddNote</h1>
+
+<h4>Notes</h4>
+<hr/>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddNote">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input value="@ViewBag.id" asp-for="DossierId" hidden>
+            <div class="form-group">
+                <label asp-for="Text" class="control-label"></label>
+                <textarea asp-for="Text" class="form-control"></textarea>
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Visible"/> @Html.DisplayNameFor(model => model.Visible)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

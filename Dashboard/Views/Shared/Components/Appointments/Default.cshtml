@@ -1,0 +1,21 @@
+﻿@model ICollection<AppointmentList>
+
+<div class="float-right">
+    <h4>Appointments</h4>
+
+    @if (Model.Count > 0)
+    {
+        @foreach (var item in Model.Where(x => x.StartTime > DateTime.Now && x.StartTime < DateTime.Today.AddDays(7)))
+        {
+            <p class="h6">From: @item?.StartTime.TimeOfDay</p>
+            <p class="h6">To: @item?.EndTime.TimeOfDay</p>
+            <p class="h6">Cancelled: @item?.Cancelled</p>
+            <p class="h6">Type: @item?.AppointmentType</p>
+            <hr/>
+        }
+    }
+    else
+    {
+        <p class="h6">You have no appointments today</p>
+    }
+</div>

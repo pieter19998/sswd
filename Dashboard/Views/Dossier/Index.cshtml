@@ -1,0 +1,55 @@
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model IEnumerable<Core.Dossier>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @HtmlHelperDisplayNameExtensions.DisplayNameFor(Html, model => model.Patient.Firstname)
+        </th>
+        <th>
+            @HtmlHelperDisplayNameExtensions.DisplayNameFor(Html, model => model.Patient.Lastname)
+        </th>
+        <th>
+            @HtmlHelperDisplayNameExtensions.DisplayNameFor(Html, model => model.Patient.Email)
+        </th>
+        <th>
+            @HtmlHelperDisplayNameExtensions.DisplayNameFor(Html, model => model.Patient.PatientNumber)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Patient.Firstname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Patient.Lastname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Patient.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Patient.PatientNumber)
+            </td>
+            <td>
+                @* <a asp-action="Edit" asp-route-id="@item.DossierId">Edit</a> | *@
+                <a asp-action="Details" asp-route-id="@item.DossierId" class=" btn btn-primary">Details</a>
+                @* <a asp-action="Delete" asp-route-id="@item.DossierId">Delete</a> *@
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

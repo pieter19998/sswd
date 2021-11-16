@@ -1,0 +1,99 @@
+@model DossierModel
+
+@{
+    // ViewData["Title"] = "Create";
+    var id = (int) TempData["patientId"];
+    // int headPractitioner = (int) TempData["headPractitioner"];
+}
+
+<script
+    src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+    integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+    crossorigin="anonymous" xmlns="http://www.w3.org/1999/html"></script>
+
+<h1>Create</h1>
+
+<h4>Dossier</h4>
+<hr/>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <input asp-for="PatientId" type="hidden" value="@id">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="HeadPractitioner" class="control-label"></label>
+                <select asp-for="HeadPractitioner" class="form-control" asp-items="ViewBag.HeadPractitioner"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="BodyLocation" class="control-label"></label>
+                <select asp-for="BodyLocation" class="form-control" asp-items="ViewBag.BodyLocation" id="bodyLocation"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Pathology" class="control-label"></label>
+                <select asp-for="Code" id="PathologySelect" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="DiagnoseDescription" class="control-label"></label>
+                <textarea asp-for="DiagnoseDescription" id="DiagnoseDescription" class="form-control" rows="5" readonly></textarea>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea style="overflow:auto;resize:none" class="form-control" type="text" asp-for="Description" rows="5" maxlength="500"></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="DismissalDay" class="control-label"></label>
+                <input class="form-control" type="date" asp-for="DismissalDay"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="PatientType" class="control-label"></label>
+                <span asp-validation-for="PatientType" class="text-danger"></span>
+                <select asp-for="PatientType" class="form-control">
+                    <option value="Employee">Employee</option>
+                    <option value="Student">Student</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+//get dates
+$( '#bodyLocation' ).change(function() {
+  var selectedName = $(this).children('option:selected').val();
+  $.ajax({
+                      type: "POST",
+                      url: "/dossier/GetPathology",
+                      data: "bodyLocation=" + selectedName,
+                      success: function (data) {
+                          document.getElementById("PathologySelect").innerText = "";
+                         $.each(data, function (i, item) {
+                             $('#PathologySelect').append($('<option>', { 
+                                 value: item.code,
+                                 text : item.pathology 
+                             }));
+                         });
+                      }
+                  });
+});
+$( '#PathologySelect' ).change(function() {
+  var selectedName = $(this).children('option:selected').val();
+  $.ajax({
+                      type: "POST",
+                      url: "/dossier/GetDescription",
+                      data: "code=" + selectedName,
+                      success: function (data) {
+                          if (data.length > 0) {  
+                              document.getElementById('DiagnoseDescription').value=data;
+                          }
+                      }
+                  });
+});
+</script>

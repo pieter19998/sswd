@@ -1,0 +1,210 @@
+@using Core
+@model Core.Dossier
+
+@{
+    var imgSrc = string.Format("data:image/png;base64,{0}", Model.Patient.Photo);
+}
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+<div>
+    <h4>Dossier</h4>
+    <hr/>
+    <img src="@imgSrc" height="200" alt="profile picture..."/>
+    <hr>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Patient.Firstname)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Patient.Firstname)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Patient.Lastname)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Patient.Lastname)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Patient.Email)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Patient.Email)
+        </dd>
+        @if (Model.Patient.Type == PatientType.EMPLOYEE)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Patient.PersonalNumber)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Patient.PersonalNumber)
+            </dd>
+        }
+        else
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Patient.StudentNumber)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Patient.StudentNumber)
+            </dd>
+        }
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Age)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Age)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DiagnoseCode)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DiagnoseCode)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DiagnoseDescription)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DiagnoseDescription)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.HeadPractitioner)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.HeadPractitioner.Lastname)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ApplicationDay)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ApplicationDay)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DismissalDay)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DismissalDay)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Active)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Active)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TreatmentPlan.SessionDuration)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TreatmentPlan.SessionDuration)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TreatmentPlan.SessionsPerWeek)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TreatmentPlan.SessionsPerWeek)
+        </dd>
+    </dl>
+</div>
+<h3>Notes</h3>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Notices.FirstOrDefault().Author)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Notices.FirstOrDefault().Text)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Notices.FirstOrDefault().Date)
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @* @if (User.IsInRole("PATIENT")) *@
+    @* { *@
+    @*     Model.Notices = Model.Notices.Where(x => x.Visible) as ICollection<Notes>; *@
+    @* } *@
+    @if (Model.Notices != null)
+    {
+        foreach (var item in Model.Notices)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Text)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>
+<br>
+<h3>Sessions</h3>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Sessions.FirstOrDefault().SessionDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Sessions.FirstOrDefault().RoomType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Sessions.FirstOrDefault().SessionEmployee)
+        </th>
+        <th>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @if (Model.Sessions != null)
+    {
+        foreach (var item in Model.Sessions)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SessionDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RoomType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SessionEmployee.Lastname)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", "Session", new {id = item.SessionId}, new {@class = "btn btn-primary"})
+                </td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>
+<div>
+    @if (User.IsInRole("PHYSIO_THERAPIST") || User.IsInRole("STUDENT_EMPLOYEE"))
+    {
+        <a asp-action="AddNote" asp-route-id="@Model.DossierId" class="btn btn-primary">Add Note</a>
+        <a asp-action="Edit" asp-route-id="@Model.DossierId" class="btn btn-primary">Edit Dossier</a>
+        @Html.ActionLink("Edit Patient", "Edit", "Patient", new {id = Model.PatientId}, new {@class = "btn btn-primary"})
+        ;
+    }
+    else
+    {
+        @Html.ActionLink("Edit Address", "UpdateAddress", "Patient", new {id = Model.PatientId}, new {@class = "btn btn-primary"})
+        ;
+    }
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+</div>

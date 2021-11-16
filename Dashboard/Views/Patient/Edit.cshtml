@@ -1,0 +1,105 @@
+@using Core
+@model Core.Patient
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Patient</h4>
+<hr/>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="PatientId"/>
+            <input asp-for="Role" type="hidden"/>
+            <input asp-for="Active" type="hidden"/>
+            <input asp-for="Type" type="hidden"/>
+            <input asp-for="Photo" type="hidden" id="photo"/>
+
+            <div class="form-group">
+                <label asp-for="Firstname" class="control-label"></label>
+                <input asp-for="Firstname" class="form-control"/>
+                <span asp-validation-for="Firstname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Lastname" class="control-label"></label>
+                <input asp-for="Lastname" class="form-control"/>
+                <span asp-validation-for="Lastname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control"/>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control"/>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sex" class="control-label"></label>
+                <select asp-for="Sex" class="form-control">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="PatientNumber" class="control-label"></label>
+                <input asp-for="PatientNumber" class="form-control"/>
+                <span asp-validation-for="PatientNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="file" onchange="previewFile()"><br>
+                <img src="" height="200" alt="Image preview...">
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DayOfBirth" class="control-label"></label>
+                <input asp-for="DayOfBirth" class="form-control"/>
+                <span asp-validation-for="DayOfBirth" class="text-danger"></span>
+            </div>
+            @if (Model.Type == PatientType.EMPLOYEE)
+            {
+                <div class="form-group">
+                    <label asp-for="PersonalNumber" class="control-label"></label>
+                    <input asp-for="PersonalNumber" class="form-control"/>
+                    <span asp-validation-for="PersonalNumber" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="StudentNumber" class="control-label"></label>
+                    <input asp-for="StudentNumber" class="form-control"/>
+                    <span asp-validation-for="StudentNumber" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function previewFile() {
+  const preview = document.querySelector('img');
+  const file = document.querySelector('input[type=file]').files[0];
+  const reader = new FileReader();
+
+  reader.addEventListener("load", function () {
+    // convert image file to base64 string
+    const mega64 = reader.result.split(",");
+    document.getElementById("photo").value = mega64[1];
+    preview.src = reader.result;
+  }, false);
+
+  if (file) {
+    reader.readAsDataURL(file);
+  }
+}
+</script>
